@@ -1,6 +1,6 @@
 def add_time_segment():
     if powerline.args.shell == 'bash':
-        time = ' \\t '
+        time = ' \\t'
     elif powerline.args.shell == 'zsh':
         time = ' %* '
     else:
