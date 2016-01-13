@@ -85,40 +85,46 @@ There are a few optional arguments which can be seen by running `powerline-shell
 ### Bash:
 Add the following to your `.bashrc` (or `.profile` on Mac):
 
-        function _update_ps1() {
-           PS1="$(~/powerline-shell.py $? 2> /dev/null)"
-        }
+```
+function _update_ps1() {
+    PS1="$(~/powerline-shell.py $? 2> /dev/null)"
+}
 
-        if [ "$TERM" != "linux" ]; then
-            PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-        fi
+if [ "$TERM" != "linux" ]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+```
 
 ### ZSH:
 Add the following to your `.zshrc`:
 
-        function powerline_precmd() {
-          PS1="$(~/powerline-shell.py $? --shell zsh 2> /dev/null)"
-        }
+```
+function powerline_precmd() {
+    PS1="$(~/powerline-shell.py $? --shell zsh 2> /dev/null)"
+}
 
-        function install_powerline_precmd() {
-          for s in "${precmd_functions[@]}"; do
-            if [ "$s" = "powerline_precmd" ]; then
-              return
-            fi
-          done
-          precmd_functions+=(powerline_precmd)
-        }
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
 
-        if [ "$TERM" != "linux" ]; then
-            install_powerline_precmd
-        fi
+if [ "$TERM" != "linux" ]; then
+    install_powerline_precmd
+fi
+```
 
 ### Fish:
 Redefine `fish_prompt` in ~/.config/fish/config.fish:
 
-        function fish_prompt
-            ~/powerline-shell.py $status --shell bare ^/dev/null
-        end
+```
+function fish_prompt
+    ~/powerline-shell.py $status --shell bare ^/dev/null
+end
+```
 
 # Customization
 
@@ -145,6 +151,10 @@ scenario.
 Make sure you introduce new default colors in `themes/default.py` for every new
 segment you create. Test your segment with this theme first.
 
+You should add tests for your segment as best you are able. Unit and
+integration tests are both welcome. Run your tests with the `nosetests` command
+after install the requirements in `dev_requirements.txt`.
+
 ### Themes
 
 The `themes` directory stores themes for your prompt, which are basically color
@@ -160,6 +170,27 @@ a theme, please test your theme on multiple terminals, especially with default
 settings.
 
 # Changes
+
+2015-12-26
+
+* Beginnings of unit testing for segments. Included in this change was a
+  refactor of the way segments are added to powerline. Now, instead of looking
+  for a global `powerline` object, `powerline` is passed into the function to
+  add the segment. Segments will also no longer add the segments by calling the
+  `add` function themselves.
+  ([@b-ryan](https://github.com/milkbikis/powerline-shell/pull/212))
+* Python3 fixes for `lib/color_compliment.py`.
+  ([@ceholden](https://github.com/milkbikis/powerline-shell/pull/220))
+
+2015-11-25
+
+* `virtual_env` segment now supports environments made with `conda`
+  ([@ceholden](https://github.com/milkbikis/powerline-shell/pull/198))
+
+2015-11-21
+
+* Fixes for Python 3 compatibility
+  ([@b-ryan](https://github.com/milkbikis/powerline-shell/pull/211))
 
 2015-11-18
 
