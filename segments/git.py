@@ -61,11 +61,15 @@ def add_git_segment(powerline):
         p = subprocess.Popen(['git', 'status', '--porcelain', '-b'],
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                              env=git_subprocess_env())
+        p2 = subprocess.Popen(['git', 'rev-parse', '--show-toplevel'],
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             env=git_subprocess_env())
     except OSError:
         # Popen will throw an OSError if git is not found
         return
 
     pdata = p.communicate()
+    p2data = p2.communicate()
     if p.returncode != 0:
         return
 
@@ -86,5 +90,10 @@ def add_git_segment(powerline):
         bg = Color.REPO_DIRTY_BG
         fg = Color.REPO_DIRTY_FG
 
-    powerline.append(' %s ' % branch, fg, bg)
-    stats.add_to_powerline(powerline, Color)
+    if p2data[0].decode("utf-8").splitlines()[0] == os.getenv("HOME"):
+        if os.getcwd() == os.getenv("HOME"):
+            powerline.append(' %s ' % branch, fg, bg)
+            stats.add_to_powerline(powerline, Color)
+    else:
+        powerline.append(' %s ' % branch, fg, bg)
+        stats.add_to_powerline(powerline, Color)
