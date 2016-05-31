@@ -59,6 +59,9 @@ class DefaultColor:
     VCSH_BG = 27
     VCSH_FG = 00
 
+    ETC_DIRTY_BG = 254
+    ETC_DIRTY_FG = 166
+
 class Color(DefaultColor):
     """
     This subclass is required when the user chooses to use 'default' theme.
